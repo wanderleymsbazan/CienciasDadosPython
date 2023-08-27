@@ -1,7 +1,7 @@
 from abc import ABC, abstractclassmethod, abstractproperty
 from datetime import datetime
 
-
+# Classe base Cliente
 class Cliente:
     def __init__(self, endereco):
         self.endereco = endereco
@@ -13,7 +13,7 @@ class Cliente:
     def adicionar_conta(self, conta):
         self.contas.append(conta)
 
-
+# Classe derivada PessoaFisica, herda de Cliente
 class PessoaFisica(Cliente):
     def __init__(self, nome, data_nascimento, cpf, endereco):
         super().__init__(endereco)
@@ -21,7 +21,7 @@ class PessoaFisica(Cliente):
         self.data_nascimento = data_nascimento
         self.cpf = cpf
 
-
+# Classe Conta
 class Conta:
     def __init__(self, numero, cliente):
         self._saldo = 0
@@ -30,10 +30,12 @@ class Conta:
         self._cliente = cliente
         self._historico = Historico()
 
+    # Método de classe para criar nova conta
     @classmethod
     def nova_conta(cls, cliente, numero):
         return cls(numero, cliente)
 
+    # Propriedades da conta
     @property
     def saldo(self):
         return self._saldo
@@ -54,6 +56,7 @@ class Conta:
     def historico(self):
         return self._historico
 
+    # Método para realizar saque
     def sacar(self, valor):
         saldo = self.saldo
         excedeu_saldo = valor > saldo
@@ -71,6 +74,7 @@ class Conta:
 
         return False
 
+    # Método para realizar depósito
     def depositar(self, valor):
         if valor > 0:
             self._saldo += valor
@@ -81,13 +85,14 @@ class Conta:
 
         return True
 
-
+# Classe ContaCorrente, herda de Conta
 class ContaCorrente(Conta):
     def __init__(self, numero, cliente, limite=500, limite_saques=3):
         super().__init__(numero, cliente)
         self.limite = limite
         self.limite_saques = limite_saques
 
+    # Sobrescrita do método sacar para considerar limite e limite de saques
     def sacar(self, valor):
         numero_saques = len(
             [transacao for transacao in self.historico.transacoes if transacao["tipo"] == Saque.__name__]
@@ -98,15 +103,14 @@ class ContaCorrente(Conta):
 
         if excedeu_limite:
             print("\n@@@ Operação falhou! O valor do saque excede o limite. @@@")
-
         elif excedeu_saques:
             print("\n@@@ Operação falhou! Número máximo de saques excedido. @@@")
-
         else:
             return super().sacar(valor)
 
         return False
 
+    # Sobrescrita do método __str__ para exibir informações da conta
     def __str__(self):
         return f"""\
             Agência:\t{self.agencia}
@@ -114,7 +118,7 @@ class ContaCorrente(Conta):
             Titular:\t{self.cliente.nome}
         """
 
-
+# Classe Historico
 class Historico:
     def __init__(self):
         self._transacoes = []
@@ -123,6 +127,7 @@ class Historico:
     def transacoes(self):
         return self._transacoes
 
+    # Método para adicionar transações ao histórico
     def adicionar_transacao(self, transacao):
         self._transacoes.append(
             {
@@ -132,7 +137,7 @@ class Historico:
             }
         )
 
-
+# Classe abstrata Transacao
 class Transacao(ABC):
     @property
     @abstractproperty
@@ -143,7 +148,7 @@ class Transacao(ABC):
     def registrar(self, conta):
         pass
 
-
+# Classe Saque, herda de Transacao
 class Saque(Transacao):
     def __init__(self, valor):
         self._valor = valor
@@ -152,13 +157,14 @@ class Saque(Transacao):
     def valor(self):
         return self._valor
 
+    # Método para registrar um saque na conta
     def registrar(self, conta):
         sucesso_transacao = conta.sacar(self.valor)
 
         if sucesso_transacao:
             conta.historico.adicionar_transacao(self)
 
-
+# Classe Deposito, herda de Transacao
 class Deposito(Transacao):
     def __init__(self, valor):
         self._valor = valor
@@ -167,6 +173,7 @@ class Deposito(Transacao):
     def valor(self):
         return self._valor
 
+    # Método para registrar um depósito na conta
     def registrar(self, conta):
         sucesso_transacao = conta.depositar(self.valor)
 
