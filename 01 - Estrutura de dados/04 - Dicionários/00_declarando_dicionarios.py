@@ -2,7 +2,7 @@
 pessoa = {"nome": "Wanderley", "idade": 41}
 
 # Imprimindo o dicionário "pessoa" na saída.
-print(pessoa)Wanderley
+print(pessoa) 
 
 # Criando um novo dicionário "pessoa" usando a função dict e passando os valores como argumentos nomeados.
 pessoa = dict(nome="Wanderley", idade=41)

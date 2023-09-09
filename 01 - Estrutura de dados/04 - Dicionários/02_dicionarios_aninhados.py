@@ -12,5 +12,7 @@ telefone = contatos["giovanna@gmail.com"]["telefone"]
 
 # Imprimindo o valor da variável "telefone". A saída será: "3443-2121".
 print(telefone)
+nome = contatos["wanderleybazan@gmail.com"]["nome"]
+print(nome)
 
 # Nesse código, o dicionário "contatos" armazena informações sobre várias pessoas, onde os e-mails são usados como chaves. O valor associado ao e-mail "giovanna@gmail.com" é um subdicionário contendo informações como nome e telefone. O código acessa o telefone da pessoa associada ao e-mail "giovanna@gmail.com" e imprime esse número de telefone.

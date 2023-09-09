@@ -22,3 +22,7 @@ exibir_mensagem_3()
 
 # Chama a terceira função, passando o argumento 'nome' como "Chappie".
 exibir_mensagem_3(nome="Chappie")
+
+nome = input("Digite o seu nome: ")
+exibir_mensagem_3(nome=nome)
+
